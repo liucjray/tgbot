@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix' => 'oa'], function () {
+    Route::get('/tester', 'OA\\FlowNotificationController@tester')
+        ->name('oa:flowNotification:tester');
+});
