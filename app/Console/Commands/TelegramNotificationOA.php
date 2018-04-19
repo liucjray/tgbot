@@ -37,5 +37,7 @@ class TelegramNotificationOA extends Command
     public function handle(FlowNotificationService $flowNotificationService)
     {
         $flowNotificationService->tester();
+
+        $flowNotificationService->adminStaff();
     }
 }

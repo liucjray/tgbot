@@ -40,7 +40,7 @@ class TelegramNotification extends Command
     {
         $response = Telegram::sendMessage([
             'chat_id' => env('CHAT_ID_TR2'),
-            'text' => 'Teemo 每分鐘蹲下來含'
+            'text' => 'Teemo suck my dick hourly.'
         ]);
         $messageId = $response->getMessageId();
     }

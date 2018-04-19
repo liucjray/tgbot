@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('command:telegram:notification')->everyThirtyMinutes();
+        $schedule->command('command:telegram:notification')->hourly();
 
         $schedule->command('command:telegram:notification:oa')->everyMinute();
     }

@@ -19,4 +19,9 @@ class FlowNotificationController extends Controller
     {
         $this->flowNotificationSer->tester();
     }
+
+    public function adminStaff()
+    {
+        $this->flowNotificationSer->adminStaff();
+    }
 }
