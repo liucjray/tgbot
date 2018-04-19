@@ -33,9 +33,15 @@ class FlowNotificationService
             $tester = ['kelly'];
             foreach ($flows as $flow) {
                 //符合以下條件才會通知
-                //1. 測試人員
-                //2. 接收人員是第一站
-                if (in_array($flow->station_user_name, $tester) && $flow->station_sort == 1) {
+                $conds = [
+                    //1. 測試人員
+                    in_array($flow->station_user_name, $tester),
+                    //2. 接收人員是第一站
+                    $flow->station_sort == 1,
+                    //3. 下午五點前才發
+                    date('i') < 17
+                ];
+                if (!in_array(false, $conds) === true) {
                     Telegram::sendMessage([
                         'chat_id' => env('CHAT_ID_TESTER'),
                         'text' => sprintf(
