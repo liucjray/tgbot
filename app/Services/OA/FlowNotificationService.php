@@ -5,6 +5,7 @@ namespace App\Services\OA;
 use App\Repositories\OA\FlowViewRepository;
 use App\Repositories\OA\LeaveViewRepository;
 use App\Repositories\OA\UserRepository;
+use Illuminate\Support\Facades\Storage;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class FlowNotificationService
@@ -17,7 +18,8 @@ class FlowNotificationService
         FlowViewRepository $flowViewRepository,
         UserRepository $userRepository,
         LeaveViewRepository $leaveViewRepository
-    ) {
+    )
+    {
         $this->flowViewRep = $flowViewRepository;
         $this->userRep = $userRepository;
         $this->leaveViewRep = $leaveViewRepository;
@@ -91,5 +93,21 @@ class FlowNotificationService
                 )
             ]);
         }
+    }
+
+    public function tr2()
+    {
+        // 訊息
+        Telegram::sendMessage([
+            'chat_id' => env('CHAT_ID_TR2'),
+            'text' => 'Teemo sucks my dick.'
+        ]);
+
+        // 照片
+        Telegram::sendPhoto([
+            'chat_id' => env('CHAT_ID_TR2'),
+            'photo' => public_path('images/keep/mouse.jpg'),
+            'caption' => 'sucks!!!'
+        ]);
     }
 }

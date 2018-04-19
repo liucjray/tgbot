@@ -24,4 +24,9 @@ class FlowNotificationController extends Controller
     {
         $this->flowNotificationSer->adminStaff();
     }
+
+    public function tr2()
+    {
+        $this->flowNotificationSer->tr2();
+    }
 }

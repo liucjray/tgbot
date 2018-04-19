@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Services\OA\FlowNotificationService;
 use Illuminate\Console\Command;
-use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramNotification extends Command
 {
@@ -32,16 +32,10 @@ class TelegramNotification extends Command
     }
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @param FlowNotificationService $flowNotificationService
      */
-    public function handle()
+    public function handle(FlowNotificationService $flowNotificationService)
     {
-        $response = Telegram::sendMessage([
-            'chat_id' => env('CHAT_ID_TR2'),
-            'text' => 'Teemo suck my dick hourly.'
-        ]);
-        $messageId = $response->getMessageId();
+        $flowNotificationService->tr2();
     }
 }
