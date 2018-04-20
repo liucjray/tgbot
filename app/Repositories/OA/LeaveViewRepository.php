@@ -17,12 +17,12 @@ class LeaveViewRepository
 
     public function getFlowMinAgo($interval = 1)
     {
-        $c = Carbon::now();
-        $cMinAgo = $c->subMinute($interval);
+        $start = Carbon::createFromTime(date('H'), date('i'), 0)->subMinute($interval)->timestamp;
+        $end = Carbon::createFromTime(date('H'), date('i'), 0)->subSecond()->timestamp;
 
         $r = $this->model
             ->where('is_del', 0)
-            ->where('create_time', '>=', $cMinAgo->timestamp)
+            ->whereBetween('create_time', [$start, $end])
             ->get();
         return $r;
     }
