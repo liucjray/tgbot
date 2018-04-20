@@ -5,7 +5,7 @@ namespace App\Services\OA;
 use App\Repositories\OA\FlowViewRepository;
 use App\Repositories\OA\LeaveViewRepository;
 use App\Repositories\OA\UserRepository;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class FlowNotificationService
@@ -27,13 +27,12 @@ class FlowNotificationService
 
     public function tester()
     {
-        $flows = $this->flowViewRep->getFlowOneMinAgo();
-
+        Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, '=== start ==='));
+        $flows = $this->flowViewRep->getFlowMinAgo();
+        Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, '=== fetch getFlowOneMinAgo finished ==='));
         if ($flows->count() > 0) {
-//            $tester = $this->userRep->getTester()->pluck('emp_no')->all();
-//            $tester[] = 'ray';
             $tester = ['kelly'];
-            foreach ($flows as $flow) {
+            foreach ($flows as $k=>$flow) {
                 //符合以下條件才會通知
                 $conds = [
                     //1. 測試人員
@@ -41,10 +40,12 @@ class FlowNotificationService
                     //2. 接收人員是第一站
                     $flow->station_sort == 1,
                     //3. 下午五點前才發
-                    date('H') < 17
+                    date('H') < 17,
                 ];
+                Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, "=== Process[$k][{$flow->id}] start ==="));
                 $canSend = !in_array(false, $conds) === true;
                 if ($canSend) {
+                    Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, "=== sendMessage Process[$k][{$flow->id}] start ==="));
                     Telegram::sendMessage([
                         'chat_id' => env('CHAT_ID_TESTER'),
                         'text' => sprintf(
@@ -62,10 +63,12 @@ class FlowNotificationService
                             sprintf('https://oaoa.tech/index.php?m=&c=Flow&a=read&id=%d', $flow->id)
                         )
                     ]);
+                    Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, "=== sendMessage Process[$k][{$flow->id}] finished ==="));
                 }
+                Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, "=== Process[$k][{$flow->id}] end ==="));
             }
         }
-
+        Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, '=== end ==='));
     }
 
     public function adminStaff()

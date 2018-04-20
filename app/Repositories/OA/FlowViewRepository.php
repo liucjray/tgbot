@@ -14,14 +14,15 @@ class FlowViewRepository
         $this->model = $flowView;
     }
 
-    public function getFlowOneMinAgo($interval = 1)
+    public function getFlowMinAgo($interval = 1)
     {
-        $c = Carbon::now();
-        $cOneMinAgo = $c->subMinute($interval);
+        $YmdHis = 'Y-m-d H:i:s';
+        $start = Carbon::createFromTime(date('H'), date('i'), 0)->subMinute($interval)->format($YmdHis);
+        $end = Carbon::createFromTime(date('H'), date('i'), 0)->subSecond()->format($YmdHis);
 
         $r = $this->model
             ->where('is_del', 0)
-            ->where('station_create_at', '>=', $cOneMinAgo)
+            ->whereBetween('station_create_at', [$start, $end])
             ->get();
         return $r;
     }
