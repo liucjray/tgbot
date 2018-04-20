@@ -41,9 +41,10 @@ class FlowNotificationService
                     //2. 接收人員是第一站
                     $flow->station_sort == 1,
                     //3. 下午五點前才發
-                    date('i') < 17
+                    date('H') < 17
                 ];
-                if (!in_array(false, $conds) === true) {
+                $canSend = !in_array(false, $conds) === true;
+                if ($canSend) {
                     Telegram::sendMessage([
                         'chat_id' => env('CHAT_ID_TESTER'),
                         'text' => sprintf(

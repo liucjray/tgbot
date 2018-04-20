@@ -14,10 +14,10 @@ class FlowViewRepository
         $this->model = $flowView;
     }
 
-    public function getFlowOneMinAgo()
+    public function getFlowOneMinAgo($interval = 1)
     {
         $c = Carbon::now();
-        $cOneMinAgo = $c->subMinute();
+        $cOneMinAgo = $c->subMinute($interval);
 
         $r = $this->model
             ->where('is_del', 0)
