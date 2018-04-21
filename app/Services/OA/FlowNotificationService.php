@@ -5,6 +5,7 @@ namespace App\Services\OA;
 use App\Repositories\OA\FlowViewRepository;
 use App\Repositories\OA\LeaveViewRepository;
 use App\Repositories\OA\UserRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -101,6 +102,13 @@ class FlowNotificationService
 
     public function tr2()
     {
+        // 若不符合條件則跳出
+        $conditions = [];
+        $conditions[] = Carbon::now()->isWeekday() ? true : false; //假日不要吵
+        $conditions[] = date('H') < 18 ? true : false; //下班不要吵
+        if (in_array(false, $conditions))
+            return false;
+
         // 訊息
         Telegram::sendMessage([
             'chat_id' => env('CHAT_ID_TR2'),
