@@ -25,3 +25,8 @@ Route::group(['prefix' => 'oa'], function () {
     Route::get('/tr2', 'OA\\FlowNotificationController@tr2')
         ->name('oa:flowNotification:tr2');
 });
+
+Route::group(['prefix' => 'stock'], function () {
+    Route::get('/', 'Stock\\StockNotificationController@index')
+        ->name('stock:flowNotification:index');
+});
