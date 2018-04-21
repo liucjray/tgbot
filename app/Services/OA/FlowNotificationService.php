@@ -105,7 +105,7 @@ class FlowNotificationService
         // 若不符合條件則跳出
         $conditions = [];
         $conditions[] = Carbon::now()->isWeekday() ? true : false; //假日不要吵
-        $conditions[] = date('H') < 18 ? true : false; //下班不要吵
+        $conditions[] = (9 <= date('H') && date('H') < 18) ? true : false; //非上班時間不要吵
         if (in_array(false, $conditions))
             return false;
 
