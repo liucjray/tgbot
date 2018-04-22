@@ -20,13 +20,27 @@ class StockNotificationService
         '2330',
     ];
 
+    private $execStartTime; //程序開始執行時間
+    private $execEndTime; //程序結束執行時間
+
     public function __construct()
     {
 //        header("Content-Type:text/html; charset=big5");
     }
 
+    private function _setExecStartTime()
+    {
+        $this->execStartTime = microtime(true);
+    }
+    private function _setExecEndTime()
+    {
+        $this->execEndTime = microtime(true);
+    }
+
     public function index()
     {
+        $this->_setExecStartTime();
+
         $client = new Client();
 
         $requests = function ($total) use ($client) {
@@ -40,7 +54,7 @@ class StockNotificationService
         };
 
         $pool = new Pool($client, $requests($this->totalPageCount), [
-            'concurrency' => $this->concurrency,
+            'concurrency' => count($this->stocks),
             'fulfilled'   => function ($response, $index) {
 
                 $res = $response->getBody()->getContents();
@@ -60,6 +74,10 @@ class StockNotificationService
         // 开始发送请求
         $promise = $pool->promise();
         $promise->wait();
+
+        $this->_setExecEndTime();
+
+        $this->showExecTime();
     }
 
     public function countedAndCheckEnded()
@@ -68,7 +86,6 @@ class StockNotificationService
             $this->counter++;
             return;
         }
-//        echo("请求结束！");
     }
 
     private function _parseHtml($html = '')
@@ -103,5 +120,16 @@ class StockNotificationService
         $sign = strpos($zhangdie->html(), 'color="#ff0000"') ? '+' : '-';
         $number = trim($zhangdie->text());
         return sprintf('%s%s', $sign, $number);
+    }
+
+    public function showExecTime()
+    {
+        $info = sprintf(
+            '總執行時間 (%s) = 結束執行時間 (%s) - 開始執行時間 (%s)',
+            $this->execEndTime-$this->execStartTime,
+            $this->execEndTime,
+            $this->execStartTime
+        );
+        dump($info);
     }
 }
