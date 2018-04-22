@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Stock;
 
 use App\Http\Controllers\Controller;
 use App\Services\Stock\StockNotificationService;
+use Illuminate\Support\Facades\Redis;
 
 class StockNotificationController extends Controller
 {

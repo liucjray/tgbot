@@ -6,19 +6,14 @@ namespace App\Services\Stock;
 use DiDom\Document;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
+use Illuminate\Support\Facades\Redis;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class StockNotificationService
 {
     private $totalPageCount;
     private $counter = 1;
-    private $concurrency = 7;  // 同时并发抓取
-
     private $uri = 'https://tw.stock.yahoo.com/q/q?s=';
-    private $stocks = [
-        '0050',
-        '0055',
-        '2330',
-    ];
 
     private $execStartTime; //程序開始執行時間
     private $execEndTime; //程序結束執行時間
@@ -36,6 +31,25 @@ class StockNotificationService
     {
         $this->execEndTime = microtime(true);
     }
+    public function showExecTime()
+    {
+        $info = sprintf(
+            '總執行時間 (%s) = 結束執行時間 (%s) - 開始執行時間 (%s)',
+            $this->execEndTime-$this->execStartTime,
+            $this->execEndTime,
+            $this->execStartTime
+        );
+        dump($info);
+    }
+
+    public function getStocks()
+    {
+        return [
+            '0050',
+            '0055',
+            '2330',
+        ];
+    }
 
     public function index()
     {
@@ -44,7 +58,7 @@ class StockNotificationService
         $client = new Client();
 
         $requests = function ($total) use ($client) {
-            foreach ($this->stocks as $key => $stock) {
+            foreach ($this->getStocks() as $key => $stock) {
 
                 $uri = $this->uri . $stock;
                 yield function () use ($client, $uri) {
@@ -54,7 +68,7 @@ class StockNotificationService
         };
 
         $pool = new Pool($client, $requests($this->totalPageCount), [
-            'concurrency' => count($this->stocks),
+            'concurrency' => count($this->getStocks()), //併發抓取
             'fulfilled'   => function ($response, $index) {
 
                 $res = $response->getBody()->getContents();
@@ -107,7 +121,7 @@ class StockNotificationService
             '最低' => $td[11]->text(),
         ];
 
-        dump($data);
+        $this->sendNotification($data);
     }
 
     private function _daihaoHandler($daihao)
@@ -122,14 +136,45 @@ class StockNotificationService
         return sprintf('%s%s', $sign, $number);
     }
 
-    public function showExecTime()
+    /**
+     * @param string $daihao
+     * @param string $shijian
+     * @return bool
+     */
+    public function needSend($daihao = '', $shijian = '')
     {
-        $info = sprintf(
-            '總執行時間 (%s) = 結束執行時間 (%s) - 開始執行時間 (%s)',
-            $this->execEndTime-$this->execStartTime,
-            $this->execEndTime,
-            $this->execStartTime
-        );
-        dump($info);
+        if (!$daihao or !$shijian)
+            return false;
+        return Redis::get("stock:$daihao") !== $shijian ? true : false;
+    }
+
+    public function sendNotification($data = [])
+    {
+        $daihao = $data['代號'];
+        $shijian = $data['時間'];
+
+        if ($this->needSend($daihao, $shijian)) {
+            // 寫入 KEY
+            Redis::set("stock:$daihao", $shijian);
+
+            // 送出通知
+            Telegram::sendMessage([
+                'chat_id' => env('CHAT_ID_RAY'),
+                'text' => $this->_getNotificationMsgFromData($data)
+            ]);
+        }
+    }
+
+    private function _getNotificationMsgFromData($data = [])
+    {
+        if (empty($data))
+            return '';
+
+        $msg = [];
+        foreach ($data as $desc => $datum) {
+            $msg[] = sprintf("%s : %s", $desc, $datum);
+        }
+
+        return implode(PHP_EOL, $msg);
     }
 }
