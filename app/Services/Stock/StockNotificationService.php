@@ -104,6 +104,7 @@ class StockNotificationService
 
     private function _parseHtml($html = '')
     {
+        $html = mb_convert_encoding($html, 'utf-8', 'big5');
         $document = new Document($html);
         $td = $document->find('html > body > center > table')[1]->find('td');
 
@@ -126,14 +127,13 @@ class StockNotificationService
 
     private function _daihaoHandler($daihao)
     {
-        return substr(trim($daihao->text()), 0, 4);
+        $text = trim($daihao->text());
+        return str_replace('加到投資組合', '', $text);
     }
 
     private function _zhangdieHandler($zhangdie)
     {
-        $sign = strpos($zhangdie->html(), 'color="#ff0000"') ? '+' : '-';
-        $number = trim($zhangdie->text());
-        return sprintf('%s%s', $sign, $number);
+        return trim($zhangdie->text());
     }
 
     /**
