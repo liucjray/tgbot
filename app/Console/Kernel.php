@@ -29,6 +29,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('command:telegram:notification:oa')->everyMinute();
 
         $schedule->command('command:telegram:notification:stock')->everyMinute();
+
+        $schedule->command('command:telegram:notification:japanese50')->everyTenMinutes();
     }
 
     /**

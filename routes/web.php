@@ -30,3 +30,8 @@ Route::group(['prefix' => 'stock'], function () {
     Route::get('/', 'Stock\\StockNotificationController@index')
         ->name('stock:flowNotification:index');
 });
+
+Route::group(['prefix' => 'japanese'], function () {
+    Route::get('/', 'Japanese\\GegeController@index')
+        ->name('stock:flowNotification:index');
+});
