@@ -12,7 +12,7 @@ class TelegramNotificationJapanese50 extends Command
      *
      * @var string
      */
-    protected $signature = 'command:telegram:notification:japanese50';
+    protected $signature = 'command:telegram:notification:japanese:50';
 
     /**
      * The console command description.
