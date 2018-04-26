@@ -111,13 +111,13 @@ class FlowNotificationService
 
         // 訊息
         Telegram::sendMessage([
-            'chat_id' => env('CHAT_ID_TR2'),
+            'chat_id' => env('CHAT_ID_TR2_BOT'),
             'text' => 'Teemo sucks my dick.'
         ]);
 
         // 照片
         Telegram::sendPhoto([
-            'chat_id' => env('CHAT_ID_TR2'),
+            'chat_id' => env('CHAT_ID_TR2_BOT'),
             'photo' => public_path('images/keep/mouse.jpg'),
             'caption' => 'sucks!!!'
         ]);

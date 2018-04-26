@@ -23,7 +23,7 @@ class TaiwanTestCentralNotificationService
 
         // 送出通知
         Telegram::sendMessage([
-            'chat_id' => env('CHAT_ID_EN_GEPT'),
+            'chat_id' => env('CHAT_ID_TR2_BOT'),
             'text' => implode(PHP_EOL, $word),
         ]);
     }
