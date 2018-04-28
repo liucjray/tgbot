@@ -28,9 +28,12 @@ class FlowNotificationService
 
     public function tester()
     {
-        Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, '=== start ==='));
+        Log::channel('bot:telegram:oa')->info(sprintf('%s: %s: %s', microtime(), __LINE__, '=== start ==='));
+
         $flows = $this->flowViewRep->getFlowMinAgo();
-        Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, '=== fetch getFlowOneMinAgo finished ==='));
+
+        Log::channel('bot:telegram:oa')->info(sprintf('%s: %s: %s', microtime(), __LINE__, '=== fetch getFlowOneMinAgo finished ==='));
+
         if ($flows->count() > 0) {
             $tester = ['kelly'];
             foreach ($flows as $k=>$flow) {
@@ -43,10 +46,10 @@ class FlowNotificationService
                     //3. 下午五點前才發
                     date('H') < 17,
                 ];
-                Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, "=== Process[$k][{$flow->id}] start ==="));
+                Log::channel('bot:telegram:oa')->info(sprintf('%s: %s: %s', microtime(), __LINE__, "=== Process[$k][{$flow->id}] start ==="));
                 $canSend = !in_array(false, $conds) === true;
                 if ($canSend) {
-                    Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, "=== sendMessage Process[$k][{$flow->id}] start ==="));
+                    Log::channel('bot:telegram:oa')->info(sprintf('%s: %s: %s', microtime(), __LINE__, "=== sendMessage Process[$k][{$flow->id}] start ==="));
                     Telegram::sendMessage([
                         'chat_id' => env('CHAT_ID_TESTER'),
                         'text' => sprintf(
@@ -64,12 +67,12 @@ class FlowNotificationService
                             sprintf('https://oaoa.tech/index.php?m=&c=Flow&a=read&id=%d', $flow->id)
                         )
                     ]);
-                    Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, "=== sendMessage Process[$k][{$flow->id}] finished ==="));
+                    Log::channel('bot:telegram:oa')->info(sprintf('%s: %s: %s', microtime(), __LINE__, "=== sendMessage Process[$k][{$flow->id}] finished ==="));
                 }
-                Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, "=== Process[$k][{$flow->id}] end ==="));
+                Log::channel('bot:telegram:oa')->info(sprintf('%s: %s: %s', microtime(), __LINE__, "=== Process[$k][{$flow->id}] end ==="));
             }
         }
-        Log::debug(sprintf('%s: %s: %s', microtime(), __LINE__, '=== end ==='));
+        Log::channel('bot:telegram:oa')->info(sprintf('%s: %s: %s', microtime(), __LINE__, '=== end ==='));
     }
 
     public function adminStaff()

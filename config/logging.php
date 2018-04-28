@@ -65,6 +65,13 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'bot:telegram:oa' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/bot/telegram/oa/' . date('Ymd') . '.log'),
+            'level' => 'info',
+        ],
+
     ],
 
 ];
