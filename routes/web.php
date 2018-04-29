@@ -35,3 +35,16 @@ Route::group(['prefix' => 'japanese'], function () {
     Route::get('/', 'Japanese\\GegeController@index')
         ->name('stock:flowNotification:index');
 });
+
+Route::group(['prefix' => 'english'], function () {
+    Route::group(['prefix' => 'taiwan_test_central'], function () {
+        Route::get('/gept', 'English\\TaiwanTestCentralController@gept')
+            ->name('english:taiwan_test_central:gept');
+
+        Route::get('/college_entrance_exam', 'English\\TaiwanTestCentralController@collegeEntranceExam')
+            ->name('english:taiwan_test_central:college_entrance_exam');
+
+        Route::get('/notification', 'English\\TaiwanTestCentralController@notification')
+            ->name('english:taiwan_test_central:notification');
+    });
+});

@@ -5,21 +5,21 @@ namespace App\Console\Commands;
 use App\Services\TelegramNotification\TaiwanTestCentralNotificationService;
 use Illuminate\Console\Command;
 
-class TelegramNotificationEnglishGept extends Command
+class TelegramNotificationEnglish extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:telegram:notification:english:gept';
+    protected $signature = 'command:telegram:notification:english';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = '全民英檢字彙表';
+    protected $description = '綜合字彙表(GEPT|CollegeEntranceExamService)';
 
     /**
      * Create a new command instance.

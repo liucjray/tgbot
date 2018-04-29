@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\English;
+namespace App\Services\English\TaiwanTestCentral;
 
 use DiDom\Document;
 use GuzzleHttp\Client;
@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Redis;
 
 class TaiwanTestCentralService
 {
-    private $uri = 'http://www.taiwantestcentral.com/WordList/WordListByName.aspx?MainCategoryID=4&Letter=';
-
-    public function getGeptData()
+    public function getData()
     {
         $html = $this->fetchHtml();
         return $this->parseHtml($html);
@@ -31,7 +29,7 @@ class TaiwanTestCentralService
     {
         // get cache
         $randomAlphas = $this->getRandomAlphas();
-        $cacheKey = "TaiwanTestCentral:$randomAlphas";
+        $cacheKey = sprintf('%s:%s', $this->cacheKey, $randomAlphas);
         $cacheByAlphas = Redis::get($cacheKey);
         if ($cacheByAlphas)
             return $cacheByAlphas;
@@ -58,6 +56,7 @@ class TaiwanTestCentralService
 
             $data = $tr->find('td');
             $rtn[] = [
+                '類別 : ' . $this->name,
                 '級別 : ' . $data[1]->text(),
                 '字詞 : ' . $data[3]->text(),
                 '中文釋義 : ' . $data[5]->text(),

@@ -2,22 +2,27 @@
 
 namespace App\Services\TelegramNotification;
 
-use App\Services\English\TaiwanTestCentralService;
-use App\Services\Japanese\GegeService;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TaiwanTestCentralNotificationService
 {
-    protected $taiwanTestCentralSer;
+    protected $examSer;
 
-    public function __construct(TaiwanTestCentralService $taiwanTestCentralService)
+    public function __construct()
     {
-        $this->taiwanTestCentralSer = $taiwanTestCentralService;
+        $randomExamType = [
+            app()->make('App\Services\English\TaiwanTestCentral\GeptService'),
+            app()->make('App\Services\English\TaiwanTestCentral\CollegeEntranceExamService'),
+        ];
+
+        shuffle($randomExamType);
+
+        $this->examSer = $randomExamType[0];
     }
 
     public function send()
     {
-        $data = $this->taiwanTestCentralSer->getGeptData();
+        $data = $this->examSer->getData();
         $idx = rand(0, count($data)-1);
         $word = $data[$idx];
 
