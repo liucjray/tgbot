@@ -24,15 +24,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // * * * * * php /var/www/tgbot/artisan schedule:run >> /dev/null 2>&1
+
         $schedule->command('command:telegram:notification')->hourly();
 
         $schedule->command('command:telegram:notification:oa')->everyMinute();
 
         $schedule->command('command:telegram:notification:stock')->everyMinute();
 
-        $schedule->command('command:telegram:notification:japanese:50')->everyTenMinutes();
+        $schedule->command('command:telegram:notification:japanese:50')->everyFiveMinutes();
 
-        $schedule->command('command:telegram:notification:english')->everyMinute();
+        $schedule->command('command:telegram:notification:english')->everyFiveMinutes();
     }
 
     /**
