@@ -54,6 +54,21 @@ return [
             'engine' => null,
         ],
 
+        'oa' => [
+            'driver' => 'mysql',
+            'host' => env('OA_HOST', '127.0.0.1'),
+            'port' => env('OA_PORT', '3306'),
+            'database' => env('OA_DATABASE', 'forge'),
+            'username' => env('OA_USERNAME', 'forge'),
+            'password' => env('OA_PASSWORD', ''),
+            'unix_socket' => env('OA_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', '127.0.0.1'),
