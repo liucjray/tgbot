@@ -2,7 +2,7 @@
 
 namespace App\Services\Stock;
 
-
+use App\Repositories\OA\StockTargetRepository;
 use DiDom\Document;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
@@ -18,9 +18,11 @@ class StockNotificationService
     private $execStartTime; //程序開始執行時間
     private $execEndTime; //程序結束執行時間
 
-    public function __construct()
+    private $stockTargetRep;
+
+    public function __construct(StockTargetRepository $stockTargetRepository)
     {
-//        header("Content-Type:text/html; charset=big5");
+        $this->stockTargetRep = $stockTargetRepository;
     }
 
     private function _setExecStartTime()
@@ -44,11 +46,7 @@ class StockNotificationService
 
     public function getStocks()
     {
-        return [
-            '0050',
-            '0055',
-            '2330',
-        ];
+        return $this->stockTargetRep->all()->pluck('code');
     }
 
     public function index()
