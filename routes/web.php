@@ -48,3 +48,7 @@ Route::group(['prefix' => 'english'], function () {
             ->name('english:taiwan_test_central:notification');
     });
 });
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
