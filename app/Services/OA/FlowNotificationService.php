@@ -45,6 +45,8 @@ class FlowNotificationService
                     $flow->station_sort == 1,
                     //3. 下午五點前才發
                     date('H') < 17,
+                    //4. IT任務才處理
+                    $flow->type == '59',
                 ];
                 Log::channel('bot:telegram:oa')->info(sprintf('%s: %s: %s', microtime(), __LINE__, "=== Process[$k][{$flow->id}] start ==="));
                 $canSend = !in_array(false, $conds) === true;
